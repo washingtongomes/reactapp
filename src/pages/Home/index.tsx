@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
-import { Card } from '../../components/Card';
+import { Card, CardProps } from '../../components/Card';
+
+type ProfileResponse = {
+  name: string;
+  avatar_url: string;
+}
+
+type User = {
+  name: string;
+  avatar: string;
+}
 
 export function Home() {
   const [studentName, setStudentName] = useState('');
-  const [students, setStudents] = useState([]);
-  const [user, setUser] = useState({name: '', avatar:''});
+  const [students, setStudents] = useState<CardProps[]>([]);
+  const [user, setUser] = useState<User>({} as User);
 
   function handleStudent() {
     const newStudent = {
@@ -20,33 +30,33 @@ export function Home() {
   setStudents(prevState => [...prevState, newStudent])
 }
 
-  // useEffect(()=>{
-  //   async function fetchData(){
-  //     const response = await fetch( "https://api.github.com/users/washingtongomes");
-  //     const data = await response.json();
-  //     console.log("DADOS====>", data);
-  //     setUser({
-  //       name: data.name,
-  //       avatar: data.avatar_url,
-  //   });
-  // }
-  // fetchData();
-  // },[]);
+   useEffect(()=>{
+     async function fetchData(){
+       const response = await fetch( "https://api.github.com/users/washingtongomes");
+       const data = await response.json() as ProfileResponse;
+       console.log("DADOS====>", data);
+       setUser({
+         name: data.name,
+         avatar: data.avatar_url,
+     });
+   }
+   fetchData();
+   },[]);
 
 
- useEffect(()=>{
-   fetch( "https://api.github.com/users/washingtongomes")
-   .then(response => response.json())
-   .then(data => {
-     setUser({
-       name: data.name,
-       avatar: data.avatar_url
-     })
-   })
-   .catch(error => console.error(error))
+//  useEffect(()=>{
+//    fetch( "https://api.github.com/users/washingtongomes")
+//    .then(response => response.json())
+//    .then(data => {
+//      setUser({
+//        name: data.name,
+//        avatar: data.avatar_url
+//      })
+//    })
+//    .catch(error => console.error(error))
 
- }
- ,[]);
+//  }
+//  ,[]);
 
   return (
     <div className='container'>
